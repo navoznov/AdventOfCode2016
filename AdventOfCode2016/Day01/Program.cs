@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Day01
 {
@@ -9,8 +11,12 @@ namespace Day01
         {
             var input = File.ReadAllText("input1.txt");
             var lines = input.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            var startPoint = new Point(0, 0);
 
-            var runner = new Runner();
+            var runner = new Runner(startPoint);
+            var path = new List<Point> { startPoint };
+            Point firstAlreadyVisitedPoint = null; // for part 2
+
             for (var i = 0; i < lines.Length; i++)
             {
                 var line = lines[i];
@@ -19,10 +25,19 @@ namespace Day01
                 ParseInstruction(line, out direction, out stepsCount);
 
                 runner.Turn(direction);
-                runner.Go(stepsCount);
+                for (var j = 0; j < stepsCount; j++)
+                {
+                    runner.Go();
+                    var currentPosition = runner.GetPoint();
+                    if (firstAlreadyVisitedPoint == null && CheckTwiceVisitedPoints(path, currentPosition))
+                    {
+                        firstAlreadyVisitedPoint = currentPosition;
+                    }
+                    path.Add(currentPosition);
+                }
             }
-
-            Console.WriteLine(runner.GetDistanceTo(0,0));
+            Console.WriteLine(runner.GetPoint().GetDistanceTo(startPoint));
+            Console.WriteLine(startPoint.GetDistanceTo(firstAlreadyVisitedPoint));
         }
 
         private static void ParseInstruction(string line, out TurnDirection direction, out int stepsCount)
@@ -30,63 +45,60 @@ namespace Day01
             direction = line[0] == 'R' ? TurnDirection.Right : TurnDirection.Left;
             stepsCount = int.Parse(line.Substring(1));
         }
+
+        private static bool CheckTwiceVisitedPoints(List<Point> path, Point point)
+        {
+            return path.Any(p => p.X == point.X && p.Y == point.Y);
+        }
     }
 
     public class Runner
     {
-        private int[] _steps;
+        protected bool _forward;
 
-        private bool _forward;
+        protected bool _xAxis;
 
-        private bool _xAxis;
-
-        private int _x;
-
-        private int _y;
-
-        public Runner()
+        public Runner(Point point)
         {
-            _steps = new int[4];
             _forward = true;
             _xAxis = false;
-            _x = 0;
-            _y = 0;
+            X = point.X;
+            Y = point.Y;
         }
 
-        public int X
+        public Point GetPoint()
         {
-            get { return _x; }
+            return new Point(X, Y);
         }
 
-        public int Y
-        {
-            get { return _y; }
-        }
+        public int X { get; protected set; }
+
+        public int Y { get; protected set; }
 
         public void Turn(TurnDirection turnDirection)
         {
-            if (_xAxis && turnDirection == TurnDirection.Right || !_xAxis && turnDirection==TurnDirection.Left)
+            if (_xAxis && turnDirection == TurnDirection.Right || !_xAxis && turnDirection == TurnDirection.Left)
             {
                 _forward = !_forward;
             }
             _xAxis = !_xAxis;
         }
 
-        public void Go(int steps)
+        public virtual void Go(int steps = 1)
         {
             if (_xAxis)
             {
-                _x = _x + (_forward ? steps : -steps);
+                X = X + (_forward ? steps : -steps);
             }
             else
             {
-                _y = _y + (_forward ? steps : -steps);
+                Y = Y + (_forward ? steps : -steps);
             }
         }
 
         public int GetDistanceTo(int x, int y)
         {
-            return Math.Abs(_x - x) + Math.Abs(_y - y);
+            return Math.Abs(X - x) + Math.Abs(Y - y);
         }
     }
 
@@ -95,5 +107,23 @@ namespace Day01
         Left,
 
         Right,
+    }
+
+    public class Point
+    {
+        public int X { get; private set; }
+
+        public int Y { get; private set; }
+
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public int GetDistanceTo(Point point)
+        {
+            return Math.Abs(X - point.X) + Math.Abs(Y - point.Y);
+        }
     }
 }
