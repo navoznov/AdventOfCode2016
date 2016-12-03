@@ -7,7 +7,7 @@ namespace Day02
     {
         static void Main(string[] args)
         {
-            //new Part1().Run();
+            new Part1().Run();
             new Part2().Run();
         }
 
