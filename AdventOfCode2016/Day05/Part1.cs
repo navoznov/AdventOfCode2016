@@ -20,7 +20,7 @@ namespace Day05
                 do
                 {
                     index++;
-                    hash = GetMd5Hash(pass + index);
+                    hash = Md5Hasher.GetMd5Hash(pass + index);
                     if(hash.StartsWith("00000"))
                         break;
                 } while (true);
@@ -28,18 +28,6 @@ namespace Day05
                 var letter = hash[5];
                 sb.Append(letter);
                 Console.WriteLine($"{letter} - {index}");
-            }
-            return sb.ToString();
-        }
-
-        public string GetMd5Hash(string str)
-        {
-            var md5Hasher = MD5.Create();
-            var data = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(str));
-            var sb = new StringBuilder();
-            foreach (var b in data)
-            {
-                sb.Append(b.ToString("x2"));
             }
             return sb.ToString();
         }
