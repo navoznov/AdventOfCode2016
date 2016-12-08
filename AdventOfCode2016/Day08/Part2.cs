@@ -1,13 +1,14 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Common;
 
 namespace Day08
 {
-    public class Part1 : IPart<int>
+    public class Part2 : IPart<string>
     {
-        public int Solve()
+        public string Solve()
         {
             const int width = 50;
             const int height = 6;
@@ -38,18 +39,17 @@ namespace Day08
                 }
             }
 
-            var counter = 0;
-            for (var i = 0; i < screen.Width; i++)
+            var sb = new StringBuilder();
+            for (var j = 0; j < screen.Height; j++)
             {
-                for (var j = 0; j < screen.Height; j++)
+                for (var i = 0; i < screen.Width; i++)
                 {
-                    if (screen.Grid[i, j])
-                    {
-                        counter++;
-                    }
+                    sb.Append(screen.Grid[i, j] ? "X" : " ");
                 }
+                sb.AppendLine();
             }
-            return counter;
+            return sb.ToString();
         }
+
     }
 }

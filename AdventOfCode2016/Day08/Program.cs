@@ -12,6 +12,8 @@ namespace Day08
         {
             var solve1 = new Part1().Solve();
             Console.WriteLine(solve1);
+            var solve2 = new Part2().Solve();
+            Console.WriteLine(solve2);
         }
     }
 }
