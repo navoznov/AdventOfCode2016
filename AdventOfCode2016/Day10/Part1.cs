@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,6 +13,7 @@ namespace Day10
             var input = File.ReadAllLines("input1.txt");
             var valueRegex = new Regex(@"value (\d+) goes to bot (\d+)");
             var computer = new Computer();
+            // parse model
             foreach (var line in input)
             {
                 var match = valueRegex.Match(line);
@@ -29,10 +31,11 @@ namespace Day10
                 }
             }
 
+            // apply instruction to ready bots
             while (true)
             {
                 var bot = computer.GetNextReadyBot();
-                if (computer.CheckStopConditionForBot(bot))
+                if (bot.Chips.Contains(61) && bot.Chips.Contains(17))       // stop condition
                 {
                     return bot.Id;
                 }

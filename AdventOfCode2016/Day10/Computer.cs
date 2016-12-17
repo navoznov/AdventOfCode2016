@@ -37,14 +37,5 @@ namespace Day10
         {
             return _bots.FirstOrDefault(x => x.Ready);
         }
-
-        public bool CheckStopConditionForBot(Bot bot)
-        {
-            if (bot == null)
-            {
-                return false;
-            }
-            return bot.Chips.Contains(61) && bot.Chips.Contains(17);
-        }
     }
 }
