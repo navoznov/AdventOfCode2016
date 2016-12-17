@@ -39,12 +39,6 @@ namespace Day09
                 var repeatableStr = str.Substring(closeBracePos + 1, lettersToRepeatCount);
                 counter += GetDecompressedStringLength(repeatableStr)*repeatCount;
 
-                Program.TotalCounter++;
-                if (Program.TotalCounter%100000 == 0)
-                {
-                    Console.WriteLine($"{Program.TotalCounter} - {counter} - {str.Length}");
-                }
-
                 str = str.Substring(closeBracePos + lettersToRepeatCount + 1);
             }
         }
